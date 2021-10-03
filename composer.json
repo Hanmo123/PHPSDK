@@ -1,0 +1,17 @@
+{
+    "name": "atomcloud/phpsdk",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hanmo",
+            "email": "1374996108@qq.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "AtomCloudSDK\\": "sdk/"
+        }
+    }
+}
