@@ -7,6 +7,7 @@ class Credential
     /**
      * 设置 Api 信息
      *
+     * @param Int $uuid
      * @param String $appId
      * @param String $appKey
      * @return void
