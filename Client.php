@@ -2,9 +2,9 @@
 
 namespace AtomCloudSDK;
 
-class ClientProfile
+class Client
 {
-    public $path, $server, $defaultServer = 'http://127.0.0.1:9500';
+    public $path, $server, $defaultServer = 'https://api.cloud.mcplugin.cn';
     private $cred, $params;
 
     /**
@@ -17,7 +17,7 @@ class ClientProfile
     {
         if (!$cred->uuid or !$cred->appId or !$cred->appKey) return false;
         $this->cred = $cred;
-        return true;
+        return $this;
     }
 
     /**
@@ -26,11 +26,11 @@ class ClientProfile
      * @param array $params
      * @return Array
      */
-    public function setParams(array $params)
+    public function setParams(array $params = [])
     {
         $_params = ['uuid' => $this->cred->uuid, 'appId' => $this->cred->appId, 'appKey' => $this->cred->appKey, 'timestamp' => time()];
         $this->params = array_merge($_params, $params);
-        return $this->params;
+        return $this;
     }
 
     /**
@@ -42,6 +42,7 @@ class ClientProfile
     public function setServer($server)
     {
         $this->server = $server;
+        return $this;
     }
 
     /**
@@ -53,18 +54,7 @@ class ClientProfile
     public function setPath($path)
     {
         $this->path = $path;
-    }
-
-    /**
-     * 从模板获取路径和参数信息
-     *
-     * @param Object $template
-     * @return void
-     */
-    public function getFromTemplate(Object $template)
-    {
-        $this->path = $template->path;
-        $this->params = $this->setParams($template->params);
+        return $this;
     }
 
     /**
@@ -80,6 +70,7 @@ class ClientProfile
         } else {
             $url = $this->defaultServer . $this->path;
         }
+        if (!$this->params) $this->setParams();
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -90,6 +81,6 @@ class ClientProfile
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->cred->genSign($this->params)));
         $return = curl_exec($ch);
         curl_close($ch);
-        return $return;
+        return json_decode($return, true);
     }
 }
